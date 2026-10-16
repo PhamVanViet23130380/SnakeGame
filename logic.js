@@ -7,6 +7,9 @@ var snake = [];
 var apple = null;
 var key = "";
 var movingKey = "";
+var dead = false;
+var score = 0;
+var win = false;
 
 function initGame(col, row) {
     for (let i = 0; i < row; i++) {
@@ -67,11 +70,13 @@ function Level1() {
     initGame(row, col);
     snake = initSnake();
     apple = initApple();
+    score = 0;
     document.getElementById("menu").hidden = true;
-    document.getElementById("subtitle").textContent = "Level 1";
+    document.getElementById("subtitle").textContent = "Level 1 - Táo: 0/10";
     game.hidden = false;
     renderSnake()
     setInterval(() => {
+        if (dead || win) return;
         let head = snake.at(-1);
         let newHead = { x: head.x, y: head.y };
         // x là hàng, y là cột
@@ -90,9 +95,23 @@ function Level1() {
                 newHead.y = head.y - 1 < 0 ? 9 : head.y - 1;
                 break;
         }
-        if (apple !== null && newHead.x === apple.x && newHead.y === apple.y) {
+        let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
+
+        let start = an ? 0 : 1;
+        for (let i = start; i < snake.length; i++) {
+            if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
+                dead = true;
+                document.getElementById("subtitle").textContent = "GAMEOVER";
+                return;
+            }
+
+        }
+
+        if (an) {
             // Ăn táo giữ đuôi, thêm đầu mới để rắn dài ra.
             snake.push(newHead);
+            score++;
+            document.getElementById("subtitle").textContent = "Level 1 - Táo: " + score + "/10";
             apple = initApple();
         } else {
             let tail = snake.shift();
@@ -102,11 +121,21 @@ function Level1() {
         }
         movingKey = key;
         renderSnake();
+        if (score >= 10) {
+            win = true;
+            Level2();
+        }
     }, 300);
 }
 
+function Level2() {
+    game.hidden = true;
+    document.getElementById("title").textContent = "LEVEL 2";
+    document.getElementById("subtitle").textContent = "WIN";
+}
+
 document.addEventListener("keydown", function (event) {
-    if (game.hidden) return;
+    if (game.hidden || dead || win) return;
     switch (event.key) {
         case "ArrowUp":
         case "ArrowDown":
