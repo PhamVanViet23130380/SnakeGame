@@ -48,6 +48,10 @@ button:hover {
     background-color: #dddddd;
 }
 
+#stop {
+    width: 80px;
+}
+
 #game {
     width: 300px;
     height: 300px;

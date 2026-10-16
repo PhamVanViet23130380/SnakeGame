@@ -1,4 +1,6 @@
 document.getElementById("l1").addEventListener("click", Level1);
+document.getElementById("stop").addEventListener("click", stopGame);
+document.getElementById("back").addEventListener("click", backMenu);
 
 var row = 10;
 var col = 10;
@@ -10,6 +12,8 @@ var movingKey = "";
 var dead = false;
 var score = 0;
 var win = false;
+var pause = false;
+var timer = null;
 
 function initGame(col, row) {
     for (let i = 0; i < row; i++) {
@@ -66,17 +70,26 @@ function renderSnake() {
 
 function Level1() {
     if (!game.hidden) return;
+    clearInterval(timer);
     game.textContent = "";
     initGame(row, col);
     snake = initSnake();
     apple = initApple();
     score = 0;
+    dead = false;
+    win = false;
+    pause = false;
+    key = "";
+    movingKey = "";
     document.getElementById("menu").hidden = true;
     document.getElementById("subtitle").textContent = "Level 1 - Táo: 0/10";
+    document.getElementById("buttons").hidden = false;
+    document.getElementById("stop").textContent = "Stop";
+    document.getElementById("stop").disabled = false;
     game.hidden = false;
     renderSnake()
-    setInterval(() => {
-        if (dead || win) return;
+    timer = setInterval(() => {
+        if (dead || win || pause || game.hidden) return;
         let head = snake.at(-1);
         let newHead = { x: head.x, y: head.y };
         // x là hàng, y là cột
@@ -97,11 +110,12 @@ function Level1() {
         }
         let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
 
-        let start = an ? 0 : 1;
-        for (let i = start; i < snake.length; i++) {
+        for (let i = 0; i < snake.length; i++) {
             if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
                 dead = true;
-                document.getElementById("subtitle").textContent = "GAMEOVER";
+                clearInterval(timer);
+                document.getElementById("stop").disabled = true;
+                document.getElementById("subtitle").textContent = "GAME OVER";
                 return;
             }
 
@@ -123,9 +137,28 @@ function Level1() {
         renderSnake();
         if (score >= 10) {
             win = true;
+            clearInterval(timer);
+            document.getElementById("stop").disabled = true;
             Level2();
         }
     }, 300);
+}
+
+function stopGame() {
+    if (game.hidden || dead || win) return;
+    pause = !pause;
+    document.getElementById("stop").textContent = pause ? "Continue" : "Stop";
+}
+
+function backMenu() {
+    clearInterval(timer);
+    timer = null;
+    pause = false;
+    game.hidden = true;
+    document.getElementById("buttons").hidden = true;
+    document.getElementById("menu").hidden = false;
+    document.getElementById("title").textContent = "RẮN SĂN MỒI";
+    document.getElementById("subtitle").textContent = "Chọn màn chơi";
 }
 
 function Level2() {
@@ -135,7 +168,7 @@ function Level2() {
 }
 
 document.addEventListener("keydown", function (event) {
-    if (game.hidden || dead || win) return;
+    if (game.hidden || dead || win || pause) return;
     switch (event.key) {
         case "ArrowUp":
         case "ArrowDown":
