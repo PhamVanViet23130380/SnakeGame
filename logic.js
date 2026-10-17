@@ -2,6 +2,7 @@ document.getElementById("l1").addEventListener("click", Level1);
 document.getElementById("stop").addEventListener("click", stopGame);
 document.getElementById("back").addEventListener("click", backMenu);
 document.getElementById("l2").addEventListener("click", Level2);
+document.getElementById("restart").addEventListener("click", choiLai);
 
 var row = 10;
 var col = 10;
@@ -16,6 +17,7 @@ var win = false;
 var pause = false;
 var timer = null;
 var tuong = [];
+var level = 1;
 
 function initGame(col, row) {
     for (let i = 0; i < row; i++) {
@@ -72,7 +74,8 @@ function renderSnake() {
 }
 
 function Level1() {
-    if (!game.hidden) return;
+    if (!game.hidden && !dead) return;
+    level = 1;
     clearInterval(timer);
     game.textContent = "";
     initGame(row, col);
@@ -89,6 +92,7 @@ function Level1() {
     document.getElementById("buttons").hidden = false;
     document.getElementById("stop").textContent = "Stop";
     document.getElementById("stop").disabled = false;
+    document.getElementById("restart").hidden = true;
     game.hidden = false;
     renderSnake()
     timer = setInterval(() => {
@@ -118,6 +122,7 @@ function Level1() {
                 dead = true;
                 clearInterval(timer);
                 document.getElementById("stop").disabled = true;
+                document.getElementById("restart").hidden = false;
                 document.getElementById("subtitle").textContent = "GAME OVER";
                 return;
             }
@@ -148,7 +153,8 @@ function Level1() {
 }
 
 function Level2() {
-    if (!game.hidden) return;
+    if (!game.hidden && !dead) return;
+    level = 2;
     clearInterval(timer);
     game.textContent = "";
     initGame(row, col);
@@ -185,6 +191,7 @@ function Level2() {
     document.getElementById("buttons").hidden = false;
     document.getElementById("stop").textContent = "Stop";
     document.getElementById("stop").disabled = false;
+    document.getElementById("restart").hidden = true;
     game.hidden = false;
     renderSnake();
     timer = setInterval(() => {
@@ -214,6 +221,7 @@ function Level2() {
                 dead = true;
                 clearInterval(timer);
                 document.getElementById("stop").disabled = true;
+                document.getElementById("restart").hidden = false;
                 document.getElementById("subtitle").textContent = "GAME OVER";
                 return;
             }
@@ -225,6 +233,7 @@ function Level2() {
                 dead = true;
                 clearInterval(timer);
                 document.getElementById("stop").disabled = true;
+                document.getElementById("restart").hidden = false;
                 document.getElementById("subtitle").textContent = "GAME OVER";
                 return;
             }
@@ -253,6 +262,13 @@ function Level2() {
     }, 300);
 }
 
+// Chơi lại đúng màn vừa thua.
+function choiLai() {
+    if (!dead) return;
+    if (level === 1) Level1();
+    else if (level === 2) Level2();
+}
+
 function stopGame() {
     if (game.hidden || dead || win) return;
     pause = !pause;
@@ -265,6 +281,7 @@ function backMenu() {
     pause = false;
     game.hidden = true;
     document.getElementById("buttons").hidden = true;
+    document.getElementById("restart").hidden = true;
     document.getElementById("menu").hidden = false;
     document.getElementById("title").textContent = "RẮN SĂN MỒI";
     document.getElementById("subtitle").textContent = "Chọn màn chơi";
@@ -272,6 +289,7 @@ function backMenu() {
 
 function Message() {
     game.hidden = true;
+    document.getElementById("restart").hidden = true;
     document.getElementById("title").textContent = "LEVEL 2";
     document.getElementById("subtitle").textContent = "WIN";
 }
