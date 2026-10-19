@@ -414,6 +414,7 @@ function Level3() {
         if (anDoc) {
             score = score - 2;
             if (score < 0) score = 0;
+            if (snake.length > 2) snake.shift();
             appleDoc = initAppleDoc();
         }
         document.getElementById("subtitle").textContent = "Level 3 - Điểm: " + score + "/10";
@@ -428,7 +429,6 @@ function Level3() {
     }, 300);
 }
 
-// Chơi lại đúng màn vừa thua.
 function choiLai() {
     if (!dead) return;
     if (level === 1) Level1();
@@ -445,6 +445,8 @@ function stopGame() {
 function backMenu() {
     clearInterval(timer);
     timer = null;
+    appleDoc = null;
+    tuong = [];
     pause = false;
     game.hidden = true;
     document.getElementById("buttons").hidden = true;
