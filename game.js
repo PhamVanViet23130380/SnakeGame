@@ -4,6 +4,7 @@ document.getElementById("back").addEventListener("click", backMenu);
 document.getElementById("l2").addEventListener("click", Level2);
 document.getElementById("restart").addEventListener("click", choiLai);
 document.getElementById("l3").addEventListener("click", Level3);
+document.getElementById("next").addEventListener("click", quaMan);
 
 var row = 10;
 var col = 10;
@@ -318,6 +319,7 @@ function Level3() {
         { x: 8, y: 1 }, { x: 7, y: 1 }, { x: 8, y: 2 },
         { x: 8, y: 7 }, { x: 8, y: 8 }, { x: 7, y: 8 },
         { x: 1, y: 7 }, { x: 1, y: 8 }, { x: 2, y: 8 },
+   
     ];
     for (const o of tuong) {
         document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
@@ -442,6 +444,13 @@ function stopGame() {
     document.getElementById("stop").textContent = pause ? "Continue" : "Stop";
 }
 
+function quaMan() {
+    if (!win || level >= 3) return;
+    backMenu();
+    if (level === 1) Level2();
+    else if (level === 2) Level3();
+}
+
 function backMenu() {
     clearInterval(timer);
     timer = null;
@@ -451,6 +460,7 @@ function backMenu() {
     game.hidden = true;
     document.getElementById("buttons").hidden = true;
     document.getElementById("restart").hidden = true;
+    document.getElementById("next").hidden = true;
     document.getElementById("menu").hidden = false;
     document.getElementById("title").textContent = "RẮN SĂN MỒI";
     document.getElementById("subtitle").textContent = "Chọn màn chơi";
@@ -459,8 +469,9 @@ function backMenu() {
 function Message() {
     game.hidden = true;
     document.getElementById("restart").hidden = true;
+    document.getElementById("next").hidden = level >= 3;
     document.getElementById("title").textContent = "LEVEL " + level;
-    document.getElementById("subtitle").textContent = "WIN";
+    document.getElementById("subtitle").textContent = "YOU WIN";
 }
 
 document.addEventListener("keydown", function (event) {
