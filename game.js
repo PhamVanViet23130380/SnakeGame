@@ -38,8 +38,8 @@ function initGame(col, row) {
 }
 
 function initSnake() {
-    let x = parseInt(Math.random() * (row - 5)) + 1;
-    let y = parseInt(Math.random() * (col - 5)) + 1;
+    let x = parseInt(Math.random() * (row - 7)) + 5;
+    let y = parseInt(Math.random() * (col - 7)) + 5;
     return [{ x, y }, { x, y: y - 1 }];
 }
 
@@ -156,11 +156,9 @@ function start() {
     movingKey = "";
     document.getElementById("menu").hidden = true;
     if (level === 3) {
-        document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/10";
-    } else if (level === 4) {
-        document.getElementById("subtitle").textContent = "Level " + level + " - Táo: 0/15";
+        document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/20";
     } else {
-        document.getElementById("subtitle").textContent = "Level " + level + " - Táo: 0/10";
+        document.getElementById("subtitle").textContent = "Level " + level + " - Táo: 0/20";
     }
     document.getElementById("buttons").hidden = false;
     document.getElementById("stop").textContent = "Stop";
@@ -222,9 +220,7 @@ function gameOver() {
 }
 
 function checkWin() {
-    let diemWin = 10;
-    if (level === 4) diemWin = 15;
-    if (score >= diemWin) {
+    if (score >= 20) {
         win = true;
         clearInterval(timer);
         document.getElementById("stop").disabled = true;
@@ -255,7 +251,7 @@ function Level1() {
             // Ăn táo giữ đuôi, thêm đầu mới để rắn dài ra.
             snake.push(newHead);
             score++;
-            document.getElementById("subtitle").textContent = "Level 1 - Táo: " + score + "/10";
+            document.getElementById("subtitle").textContent = "Level 1 - Táo: " + score + "/20";
             apple = initApple();
         } else {
             let tail = snake.shift();
@@ -314,7 +310,7 @@ function Level2() {
             // Ăn táo giữ đuôi, thêm đầu mới để rắn dài ra.
             snake.push(newHead);
             score++;
-            document.getElementById("subtitle").textContent = "Level 2 - Táo: " + score + "/10";
+            document.getElementById("subtitle").textContent = "Level 2 - Táo: " + score + "/20";
             apple = initApple();
         } else {
             let tail = snake.shift();
@@ -394,7 +390,7 @@ function Level3() {
             if (snake.length > 2) snake.shift();
             appleDoc = initAppleDoc();
         }
-        document.getElementById("subtitle").textContent = "Level 3 - Điểm: " + score + "/10";
+        document.getElementById("subtitle").textContent = "Level 3 - Điểm: " + score + "/20";
         movingKey = key;
         renderSnake();
         checkWin();
@@ -466,7 +462,7 @@ function Level4() {
             tail.y = newHead.y;
             snake.push(tail);
         }
-        document.getElementById("subtitle").textContent = "Level 4 - Táo: " + score + "/15";
+        document.getElementById("subtitle").textContent = "Level 4 - Táo: " + score + "/20";
         movingKey = key;
         renderSnake();
         checkWin();
