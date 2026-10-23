@@ -116,6 +116,85 @@ function renderSnake() {
     }
 }
 
+function start() {
+    score = 0;
+    dead = false;
+    win = false;
+    pause = false;
+    key = "";
+    movingKey = "";
+    document.getElementById("menu").hidden = true;
+    if (level === 3) {
+        document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/10";
+    } else {
+        document.getElementById("subtitle").textContent = "Level " + level + " - Táo: 0/10";
+    }
+    document.getElementById("buttons").hidden = false;
+    document.getElementById("stop").textContent = "Stop";
+    document.getElementById("stop").disabled = false;
+    document.getElementById("restart").hidden = true;
+    document.getElementById("next").hidden = true;
+    game.hidden = false;
+    renderSnake();
+}
+
+// x là hàng, y là cột.
+function diChuyen() {
+    let head = snake.at(-1);
+    let newHead = { x: head.x, y: head.y };
+    switch (key) {
+        case "ArrowUp":
+            newHead.x = head.x - 1 < 0 ? row - 1 : head.x - 1;
+            break;
+        case "ArrowDown":
+            newHead.x = head.x + 1 >= row ? 0 : head.x + 1;
+            break;
+        case "ArrowRight":
+            newHead.y = head.y + 1 >= col ? 0 : head.y + 1;
+            break;
+        case "ArrowLeft":
+        default:
+            newHead.y = head.y - 1 < 0 ? 9 : head.y - 1;
+            break;
+    }
+    return newHead;
+}
+
+function checkThan(newHead) {
+    for (let i = 0; i < snake.length; i++) {
+        if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkTuong(newHead) {
+    for (const o of tuong) {
+        if (newHead.x === o.x && newHead.y === o.y) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function gameOver() {
+    dead = true;
+    clearInterval(timer);
+    document.getElementById("stop").disabled = true;
+    document.getElementById("restart").hidden = false;
+    document.getElementById("subtitle").textContent = "GAME OVER";
+}
+
+function checkWin() {
+    if (score >= 10) {
+        win = true;
+        clearInterval(timer);
+        document.getElementById("stop").disabled = true;
+        Message();
+    }
+}
+
 function Level1() {
     if (!game.hidden && !dead) return;
     level = 1;
@@ -124,52 +203,15 @@ function Level1() {
     initGame(row, col);
     snake = initSnake();
     apple = initApple();
-    score = 0;
-    dead = false;
-    win = false;
-    pause = false;
-    key = "";
-    movingKey = "";
-    document.getElementById("menu").hidden = true;
-    document.getElementById("subtitle").textContent = "Level 1 - Táo: 0/10";
-    document.getElementById("buttons").hidden = false;
-    document.getElementById("stop").textContent = "Stop";
-    document.getElementById("stop").disabled = false;
-    document.getElementById("restart").hidden = true;
-    game.hidden = false;
-    renderSnake()
+    start();
     timer = setInterval(() => {
         if (dead || win || pause || game.hidden) return;
-        let head = snake.at(-1);
-        let newHead = { x: head.x, y: head.y };
-        // x là hàng, y là cột
-        switch (key) {
-            case "ArrowUp":
-                newHead.x = head.x - 1 < 0 ? row - 1 : head.x - 1;
-                break;
-            case "ArrowDown":
-                newHead.x = head.x + 1 >= row ? 0 : head.x + 1;
-                break;
-            case "ArrowRight":
-                newHead.y = head.y + 1 >= col ? 0 : head.y + 1;
-                break;
-            case "ArrowLeft":
-            default:
-                newHead.y = head.y - 1 < 0 ? 9 : head.y - 1;
-                break;
-        }
+        let newHead = diChuyen();
         let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
 
-        for (let i = 0; i < snake.length; i++) {
-            if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
-                dead = true;
-                clearInterval(timer);
-                document.getElementById("stop").disabled = true;
-                document.getElementById("restart").hidden = false;
-                document.getElementById("subtitle").textContent = "GAME OVER";
-                return;
-            }
-
+        if (checkThan(newHead)) {
+            gameOver();
+            return;
         }
 
         if (an) {
@@ -186,12 +228,7 @@ function Level1() {
         }
         movingKey = key;
         renderSnake();
-        if (score >= 10) {
-            win = true;
-            clearInterval(timer);
-            document.getElementById("stop").disabled = true;
-            Message();
-        }
+        checkWin();
     }, 300);
 }
 
@@ -224,64 +261,16 @@ function Level2() {
     }
 
     apple = initApple();
-    score = 0;
-    dead = false;
-    win = false;
-    pause = false;
-    key = "";
-    movingKey = "";
-    document.getElementById("menu").hidden = true;
     document.getElementById("title").textContent = "LEVEL 2";
-    document.getElementById("subtitle").textContent = "Level 2 - Táo: 0/10";
-    document.getElementById("buttons").hidden = false;
-    document.getElementById("stop").textContent = "Stop";
-    document.getElementById("stop").disabled = false;
-    document.getElementById("restart").hidden = true;
-    game.hidden = false;
-    renderSnake();
+    start();
     timer = setInterval(() => {
         if (dead || win || pause || game.hidden) return;
-        let head = snake.at(-1);
-        let newHead = { x: head.x, y: head.y };
-        // x là hàng, y là cột
-        switch (key) {
-            case "ArrowUp":
-                newHead.x = head.x - 1 < 0 ? row - 1 : head.x - 1;
-                break;
-            case "ArrowDown":
-                newHead.x = head.x + 1 >= row ? 0 : head.x + 1;
-                break;
-            case "ArrowRight":
-                newHead.y = head.y + 1 >= col ? 0 : head.y + 1;
-                break;
-            case "ArrowLeft":
-            default:
-                newHead.y = head.y - 1 < 0 ? 9 : head.y - 1;
-                break;
-        }
+        let newHead = diChuyen();
         let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
 
-        for (let i = 0; i < snake.length; i++) {
-            if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
-                dead = true;
-                clearInterval(timer);
-                document.getElementById("stop").disabled = true;
-                document.getElementById("restart").hidden = false;
-                document.getElementById("subtitle").textContent = "GAME OVER";
-                return;
-            }
-        }
-
-        // Rắn đụng tường
-        for (const o of tuong) {
-            if (newHead.x === o.x && newHead.y === o.y) {
-                dead = true;
-                clearInterval(timer);
-                document.getElementById("stop").disabled = true;
-                document.getElementById("restart").hidden = false;
-                document.getElementById("subtitle").textContent = "GAME OVER";
-                return;
-            }
+        if (checkThan(newHead) || checkTuong(newHead)) {
+            gameOver();
+            return;
         }
 
         if (an) {
@@ -298,12 +287,7 @@ function Level2() {
         }
         movingKey = key;
         renderSnake();
-        if (score >= 10) {
-            win = true;
-            clearInterval(timer);
-            document.getElementById("stop").disabled = true;
-            Message();
-        }
+        checkWin();
     }, 300);
 }
 
@@ -319,7 +303,6 @@ function Level3() {
         { x: 8, y: 1 }, { x: 7, y: 1 }, { x: 8, y: 2 },
         { x: 8, y: 7 }, { x: 8, y: 8 }, { x: 7, y: 8 },
         { x: 1, y: 7 }, { x: 1, y: 8 }, { x: 2, y: 8 },
-   
     ];
     for (const o of tuong) {
         document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
@@ -339,65 +322,17 @@ function Level3() {
 
     apple = initApple();
     appleDoc = initAppleDoc();
-    score = 0;
-    dead = false;
-    win = false;
-    pause = false;
-    key = "";
-    movingKey = "";
-    document.getElementById("menu").hidden = true;
     document.getElementById("title").textContent = "LEVEL 3";
-    document.getElementById("subtitle").textContent = "Level 3 - Điểm: 0/10";
-    document.getElementById("buttons").hidden = false;
-    document.getElementById("stop").textContent = "Stop";
-    document.getElementById("stop").disabled = false;
-    document.getElementById("restart").hidden = true;
-    game.hidden = false;
-    renderSnake();
+    start();
     timer = setInterval(() => {
         if (dead || win || pause || game.hidden) return;
-        let head = snake.at(-1);
-        let newHead = { x: head.x, y: head.y };
-        // x là hàng, y là cột
-        switch (key) {
-            case "ArrowUp":
-                newHead.x = head.x - 1 < 0 ? row - 1 : head.x - 1;
-                break;
-            case "ArrowDown":
-                newHead.x = head.x + 1 >= row ? 0 : head.x + 1;
-                break;
-            case "ArrowRight":
-                newHead.y = head.y + 1 >= col ? 0 : head.y + 1;
-                break;
-            case "ArrowLeft":
-            default:
-                newHead.y = head.y - 1 < 0 ? 9 : head.y - 1;
-                break;
-        }
+        let newHead = diChuyen();
         let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
         let anDoc = appleDoc !== null && newHead.x === appleDoc.x && newHead.y === appleDoc.y;
 
-        for (let i = 0; i < snake.length; i++) {
-            if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
-                dead = true;
-                clearInterval(timer);
-                document.getElementById("stop").disabled = true;
-                document.getElementById("restart").hidden = false;
-                document.getElementById("subtitle").textContent = "GAME OVER";
-                return;
-            }
-        }
-
-        // Rắn đụng tường.
-        for (const o of tuong) {
-            if (newHead.x === o.x && newHead.y === o.y) {
-                dead = true;
-                clearInterval(timer);
-                document.getElementById("stop").disabled = true;
-                document.getElementById("restart").hidden = false;
-                document.getElementById("subtitle").textContent = "GAME OVER";
-                return;
-            }
+        if (checkThan(newHead) || checkTuong(newHead)) {
+            gameOver();
+            return;
         }
 
         if (an) {
@@ -422,12 +357,7 @@ function Level3() {
         document.getElementById("subtitle").textContent = "Level 3 - Điểm: " + score + "/10";
         movingKey = key;
         renderSnake();
-        if (score >= 10) {
-            win = true;
-            clearInterval(timer);
-            document.getElementById("stop").disabled = true;
-            Message();
-        }
+        checkWin();
     }, 300);
 }
 
