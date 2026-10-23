@@ -6,8 +6,8 @@ document.getElementById("restart").addEventListener("click", choiLai);
 document.getElementById("l3").addEventListener("click", Level3);
 document.getElementById("next").addEventListener("click", quaMan);
 
-var row = 10;
-var col = 10;
+var row = 15;
+var col = 15;
 var game = document.getElementById("game");
 var snake = [];
 var apple = null;
@@ -37,7 +37,7 @@ function initGame(col, row) {
 
 function initSnake() {
     let x = parseInt(Math.random() * (row - 2)) + 1;
-    let y = parseInt(Math.random() * (row - 2)) + 1;
+    let y = parseInt(Math.random() * (col - 2)) + 1;
     return [{ x, y }, { x, y: y - 1 }];
 }
 
@@ -154,7 +154,7 @@ function diChuyen() {
             break;
         case "ArrowLeft":
         default:
-            newHead.y = head.y - 1 < 0 ? 9 : head.y - 1;
+            newHead.y = head.y - 1 < 0 ? col - 1 : head.y - 1;
             break;
     }
     return newHead;
@@ -240,9 +240,9 @@ function Level2() {
     initGame(row, col);
     tuong = [
         { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 },
-        { x: 8, y: 1 }, { x: 7, y: 1 }, { x: 8, y: 2 },
-        { x: 8, y: 7 }, { x: 8, y: 8 }, { x: 7, y: 8 },
-        { x: 1, y: 7 }, { x: 1, y: 8 }, { x: 2, y: 8 },
+        { x: 13, y: 1 }, { x: 12, y: 1 }, { x: 13, y: 2 },
+        { x: 13, y: 12 }, { x: 13, y: 13 }, { x: 12, y: 13 },
+        { x: 1, y: 12 }, { x: 1, y: 13 }, { x: 2, y: 13 },
     ];
     for (const o of tuong) {
         document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
@@ -299,10 +299,13 @@ function Level3() {
     game.textContent = "";
     initGame(row, col);
     tuong = [
-        { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 },
-        { x: 8, y: 1 }, { x: 7, y: 1 }, { x: 8, y: 2 },
-        { x: 8, y: 7 }, { x: 8, y: 8 }, { x: 7, y: 8 },
-        { x: 1, y: 7 }, { x: 1, y: 8 }, { x: 2, y: 8 },
+        {x:0, y:0 }, {x:0, y:1}, {x:0, y:2},{x:0, y:3}, {x: 0, y:4}, {x:0, y:5},{x:0, y:6}, {x:0, y: 7}, {x:0, y:8}, {x:0, y:9}, {x:0, y:10}, {x:0, y:11},{x:0, y:12}, {x:0, y:13}, {x:0, y:14},
+
+        {x:14, y:0}, {x: 14, y:1}, {x:14,y:2},{x:14, y:3}, {x:14, y:4}, {x:14, y:5},{x:14, y:6}, {x:14, y:7}, {x:14, y:8},{x:14, y:9}, {x:14, y:10},{x:14, y:11},{x:14, y:12}, {x:14, y:13}, {x:14, y:14},
+
+        {x:1, y:0},{x:2, y:0}, {x:3, y:0},{ x: 4, y:0}, {x:5, y:0}, {x:6, y:0},{x:7, y:0}, {x:8, y:0}, {x:9, y:0},{x:10, y:0}, {x:11, y:0}, {x:12, y:0},{x:13, y:0},
+
+        {x:1, y:14}, {x:2, y:14}, {x:3, y:14},{x:4, y:14}, {x:5, y: 14}, {x:6, y:14},{x:7, y:14}, {x:8, y:14}, {x:9, y:14},{x:10, y:14}, {x:11,y: 14}, {x:12,y: 14},{x:13, y:14},
     ];
     for (const o of tuong) {
         document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
@@ -415,10 +418,7 @@ document.addEventListener("keydown", function (event) {
 
             let currentKey = movingKey || "ArrowLeft";
             if (
-                (currentKey === "ArrowUp" && event.key === "ArrowDown") ||
-                (currentKey === "ArrowDown" && event.key === "ArrowUp") ||
-                (currentKey === "ArrowLeft" && event.key === "ArrowRight") ||
-                (currentKey === "ArrowRight" && event.key === "ArrowLeft"))
+                (currentKey === "ArrowUp" && event.key === "ArrowDown") || (currentKey === "ArrowDown" && event.key === "ArrowUp") || (currentKey === "ArrowLeft" && event.key === "ArrowRight") || (currentKey === "ArrowRight" && event.key === "ArrowLeft"))
                 return;
 
             key = event.key;
