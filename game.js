@@ -167,6 +167,8 @@ function start() {
     document.getElementById("stop").disabled = false;
     document.getElementById("restart").hidden = true;
     document.getElementById("next").hidden = true;
+    document.getElementById("lose").hidden = true;
+    document.getElementById("san").hidden = false;
     game.hidden = false;
     renderSnake();
 }
@@ -216,7 +218,7 @@ function gameOver() {
     clearInterval(timer);
     document.getElementById("stop").disabled = true;
     document.getElementById("restart").hidden = false;
-    document.getElementById("subtitle").textContent = "GAME OVER";
+    document.getElementById("lose").hidden = false;
 }
 
 function checkWin() {
@@ -500,6 +502,8 @@ function backMenu() {
     appleTuong = null;
     tuong = [];
     pause = false;
+    document.getElementById("lose").hidden = true;
+    document.getElementById("san").hidden = true;
     game.hidden = true;
     document.getElementById("buttons").hidden = true;
     document.getElementById("restart").hidden = true;
@@ -510,6 +514,8 @@ function backMenu() {
 }
 
 function Message() {
+    document.getElementById("lose").hidden = true;
+    document.getElementById("san").hidden = true;
     game.hidden = true;
     document.getElementById("restart").hidden = true;
     document.getElementById("next").hidden = level >= 4;
