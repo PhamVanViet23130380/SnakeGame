@@ -6,6 +6,7 @@ document.getElementById("restart").addEventListener("click", choiLai);
 document.getElementById("l3").addEventListener("click", Level3);
 document.getElementById("l4").addEventListener("click", Level4);
 document.getElementById("next").addEventListener("click", quaMan);
+document.getElementById("l5").addEventListener("click", Level5);
 
 var row = 15;
 var col = 15;
@@ -23,6 +24,8 @@ var pause = false;
 var timer = null;
 var tuong = [];
 var level = 1;
+var appleDao = null;
+var count = 0;
 
 function initGame(col, row) {
     for (let i = 0; i < row; i++) {
@@ -66,6 +69,7 @@ function initApple() {
             // Táo thường != táo độc.
             if (appleDoc !== null && appleDoc.x === i && appleDoc.y === j) free = false;
             if (appleTuong !== null && appleTuong.x === i && appleTuong.y === j) free = false;
+            if (appleDao !== null && appleDao.x === i && appleDao.y === j) free = false;
             if (free) empty.push({ x: i, y: j });
         }
 
@@ -101,35 +105,10 @@ function initAppleDoc() {
     return empty[parseInt(Math.random() * empty.length)];
 }
 
-function initAppleTuong() {
-    let empty = [];
-    for (let i = 0; i < row; i++) {
-        for (let j = 0; j < col; j++) {
-            let free = true;
-            for (const dot of snake) {
-                if (dot.x === i && dot.y === j) {
-                    free = false;
-                    break;
-                }
-            }
-            for (const o of tuong) {
-                if (o.x === i && o.y === j) {
-                    free = false;
-                    break;
-                }
-            }
-            if (apple !== null && apple.x === i && apple.y === j) free = false;
-            if (free) empty.push({ x: i, y: j });
-        }
-    }
-    if (empty.length === 0) return null;
-    return empty[parseInt(Math.random() * empty.length)];
-}
-
 function renderSnake() {
     for (let i = 0; i < row; i++) {
         for (var j = 0; j < col; j++) {
-            document.getElementById("cell_" + i + "_" + j).classList.remove("dot", "apple", "appleDoc", "appleTuong");
+            document.getElementById("cell_" + i + "_" + j).classList.remove("dot", "apple", "appleDoc", "appleTuong", "appleDao");
         }
     }
     for (const dot of snake) {
@@ -145,6 +124,9 @@ function renderSnake() {
     if (appleTuong !== null) {
         document.getElementById("cell_" + appleTuong.x + "_" + appleTuong.y).classList.add("appleTuong");
     }
+    if (appleDao !== null) {
+        document.getElementById("cell_" + appleDao.x + "_" + appleDao.y).classList.add("appleDao");
+    }
 }
 
 function start() {
@@ -155,12 +137,14 @@ function start() {
     key = "";
     movingKey = "";
     document.getElementById("menu").hidden = true;
-    if (level === 3) {
+    if (level === 3 || level === 5) {
         document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/20";
     } else {
         document.getElementById("subtitle").textContent = "Level " + level + " - Táo: 0/20";
     }
     document.getElementById("buttons").hidden = false;
+    document.getElementById("daoPhim").hidden = level !== 5;
+    document.getElementById("daoPhim").textContent = "Táo vàng: +2 điểm, đảo phím trong 20 bước.";
     document.getElementById("stop").textContent = "Stop";
     document.getElementById("stop").disabled = false;
     document.getElementById("restart").hidden = true;
@@ -431,7 +415,7 @@ function Level4() {
     }
 
     apple = initApple();
-    appleTuong = initAppleTuong();
+    appleTuong = initAppleDoc();
     document.getElementById("title").textContent = "LEVEL 4";
     start();
     timer = setInterval(() => {
@@ -455,7 +439,7 @@ function Level4() {
             tuong.push({ x: tail.x, y: tail.y });
             document.getElementById("cell_" + tail.x + "_" + tail.y).classList.add("tuong");
             snake.push(newHead);
-            appleTuong = initAppleTuong();
+            appleTuong = initAppleDoc();
         } else {
             let tail = snake.shift();
             tail.x = newHead.x;
@@ -469,12 +453,95 @@ function Level4() {
     }, 300);
 }
 
+function Level5() {
+    if (!game.hidden && !dead) return;
+    level = 5;
+    clearInterval(timer);
+    appleDoc = null;
+    appleTuong = null;
+    appleDao = null;
+    count = 0;
+    game.textContent = "";
+    initGame(row, col);
+    tuong = [
+        {x:0, y:0 }, {x:0, y:1}, {x:0, y:2},{x:0, y:3}, {x: 0, y:4}, {x:0, y:5},{x:0, y:6}, {x:0, y: 7}, {x:0, y:8}, {x:0, y:9}, {x:0, y:10}, {x:0, y:11},{x:0, y:12}, {x:0, y:13}, {x:0, y:14},
+
+        {x:14, y:0}, {x: 14, y:1}, {x:14,y:2},{x:14, y:3}, {x:14, y:4}, {x:14, y:5},{x:14, y:6}, {x:14, y:7}, {x:14, y:8},{x:14, y:9}, {x:14, y:10},{x:14, y:11},{x:14, y:12}, {x:14, y:13}, {x:14, y:14},
+
+        {x:1, y:0},{x:2, y:0}, {x:3, y:0},{ x: 4, y:0}, {x:5, y:0}, {x:6, y:0},{x:7, y:0}, {x:8, y:0}, {x:9, y:0},{x:10, y:0}, {x:11, y:0}, {x:12, y:0},{x:13, y:0},
+
+        {x:1, y:14}, {x:2, y:14}, {x:3, y:14},{x:4, y:14}, {x:5, y: 14}, {x:6, y:14},{x:7, y:14}, {x:8, y:14}, {x:9, y:14},{x:10, y:14}, {x:11,y: 14}, {x:12,y: 14},{x:13, y:14},
+    ];
+    for (const o of tuong) {
+        document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
+    }
+
+    // Rắn sinh ra trùng tường thì random lại
+    let trung = true;
+    while (trung) {
+        snake = initSnake();
+        trung = false;
+        for (const o of tuong) {
+            for (const dot of snake) {
+                if (dot.x === o.x && dot.y === o.y) trung = true;
+            }
+        }
+    }
+
+    apple = initApple();
+    appleDao = initAppleDoc();
+    document.getElementById("title").textContent = "LEVEL 5";
+    start();
+    timer = setInterval(() => {
+        if (dead || win || pause || game.hidden) return;
+        let newHead = diChuyen();
+        let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
+        let anDao = appleDao !== null && newHead.x === appleDao.x && newHead.y === appleDao.y;
+
+        if (checkThan(newHead) || checkTuong(newHead)) {
+            gameOver();
+            return;
+        }
+
+        if (an) {
+            snake.push(newHead);
+            score++;
+            apple = initApple();
+        } else if (anDao) {
+            snake.push(newHead);
+            score = score + 2;
+            appleDao = initAppleDoc();
+        } else {
+            let tail = snake.shift();
+            tail.x = newHead.x;
+            tail.y = newHead.y;
+            snake.push(tail);
+        }
+
+        if (anDao) {
+            count = 20;
+        } else if (count > 0) {
+            count--;
+        }
+        document.getElementById("subtitle").textContent = "Level 5 - Điểm: " + score + "/20";
+        if (count > 0) {
+            document.getElementById("daoPhim").textContent = "Đảo phím: còn " + count + " bước.";
+        } else {
+            document.getElementById("daoPhim").textContent = "Táo vàng: +2 điểm, đảo phím trong 20 bước.";
+        }
+        movingKey = key;
+        renderSnake();
+        checkWin();
+    }, 300);
+}
+
 function choiLai() {
     if (!dead) return;
     if (level === 1) Level1();
     else if (level === 2) Level2();
     else if (level === 3) Level3();
     else if (level === 4) Level4();
+    else if (level === 5) Level5();
 }
 
 function stopGame() {
@@ -484,11 +551,12 @@ function stopGame() {
 }
 
 function quaMan() {
-    if (!win || level >= 4) return;
+    if (!win || level >= 5) return;
     backMenu();
     if (level === 1) Level2();
     else if (level === 2) Level3();
     else if (level === 3) Level4();
+    else if (level === 4) Level5();
 }
 
 function backMenu() {
@@ -496,6 +564,8 @@ function backMenu() {
     timer = null;
     appleDoc = null;
     appleTuong = null;
+    appleDao = null;
+    count = 0;
     tuong = [];
     pause = false;
     document.getElementById("lose").hidden = true;
@@ -504,6 +574,7 @@ function backMenu() {
     document.getElementById("buttons").hidden = true;
     document.getElementById("restart").hidden = true;
     document.getElementById("next").hidden = true;
+    document.getElementById("daoPhim").hidden = true;
     document.getElementById("menu").hidden = false;
     document.getElementById("title").textContent = "RẮN SĂN MỒI";
     document.getElementById("subtitle").textContent = "Chọn màn chơi";
@@ -514,7 +585,8 @@ function Message() {
     document.getElementById("san").hidden = true;
     game.hidden = true;
     document.getElementById("restart").hidden = true;
-    document.getElementById("next").hidden = level >= 4;
+    document.getElementById("next").hidden = level >= 5;
+    document.getElementById("daoPhim").hidden = true;
     document.getElementById("title").textContent = "LEVEL " + level;
     document.getElementById("subtitle").textContent = "YOU WIN";
 }
@@ -528,12 +600,20 @@ document.addEventListener("keydown", function (event) {
         case "ArrowRight": {
             event.preventDefault();
 
+            let newKey = event.key;
+            if (level === 5 && count > 0) {
+                if (newKey === "ArrowUp") newKey = "ArrowDown";
+                else if (newKey === "ArrowDown") newKey = "ArrowUp";
+                else if (newKey === "ArrowLeft") newKey = "ArrowRight";
+                else if (newKey === "ArrowRight") newKey = "ArrowLeft";
+            }
+
             let currentKey = movingKey || "ArrowLeft";
             if (
-                (currentKey === "ArrowUp" && event.key === "ArrowDown") || (currentKey === "ArrowDown" && event.key === "ArrowUp") || (currentKey === "ArrowLeft" && event.key === "ArrowRight") || (currentKey === "ArrowRight" && event.key === "ArrowLeft"))
+                (currentKey === "ArrowUp" && newKey === "ArrowDown") || (currentKey === "ArrowDown" && newKey === "ArrowUp") || (currentKey === "ArrowLeft" && newKey === "ArrowRight") || (currentKey === "ArrowRight" && newKey === "ArrowLeft"))
                 return;
 
-            key = event.key;
+            key = newKey;
             break;
         }
     }
