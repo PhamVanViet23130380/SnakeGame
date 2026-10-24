@@ -39,8 +39,33 @@
             margin-bottom: 16px;
         }
 
-        .menu {
+        #home {
+            padding: 12px 0;
+        }
+
+        #home button {
+            display: block;
+            width: 220px;
+            margin: 14px auto;
+        }
+
+        .levels {
+            display: flex;
+            justify-content: center;
             gap: 10px;
+            padding-top: 12px;
+        }
+
+        .levels button {
+            width: 65px;
+            padding: 10px 6px;
+            white-space: nowrap;
+        }
+
+        .nutVe {
+            display: block;
+            width: 220px;
+            margin: 20px auto 0;
         }
 
         button {
@@ -135,15 +160,22 @@
 <body>
     <main class="game">
         <h1 id="title">RẮN SĂN MỒI</h1>
-        <p id="subtitle" class="subtitle">Chọn màn chơi</p>
+        <p id="subtitle" class="subtitle" hidden></p>
         <p id="daoPhim" class="subtitle" hidden></p>
-        <section id="menu" class="menu" aria-label="Chọn màn chơi">
-            <button id="l1" type="button">Level 1</button>
-            <button id="l2" type="button">Level 2</button>
-            <button id="l3" type="button">Level 3</button>
-            <button id="l4" type="button">Level 4</button>
-            <button id="l5" type="button">Level 5</button>
-            <button id="l6" type="button">Level 6</button>
+        <section id="home">
+            <button id="choiNgay" type="button">Chơi ngay</button>
+            <button id="chonMan" type="button">Chọn màn chơi</button>
+        </section>
+        <section id="menu" hidden>
+            <div class="levels">
+                <button id="l1" type="button">Level 1</button>
+                <button id="l2" type="button">Level 2</button>
+                <button id="l3" type="button">Level 3</button>
+                <button id="l4" type="button">Level 4</button>
+                <button id="l5" type="button">Level 5</button>
+                <button id="l6" type="button">Level 6</button>
+            </div>
+            <button id="backHome" class="nutVe" type="button">Quay lại</button>
         </section>
         <div id="san" hidden>
             <table id="game" hidden></table>

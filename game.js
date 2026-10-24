@@ -8,6 +8,9 @@ document.getElementById("l4").addEventListener("click", Level4);
 document.getElementById("next").addEventListener("click", quaMan);
 document.getElementById("l5").addEventListener("click", Level5);
 document.getElementById("l6").addEventListener("click", Level6);
+document.getElementById("choiNgay").addEventListener("click", Level1);
+document.getElementById("chonMan").addEventListener("click", chonLevel);
+document.getElementById("backHome").addEventListener("click", backMenu);
 
 var row = 15;
 var col = 15;
@@ -149,9 +152,12 @@ function start() {
     pause = false;
     key = "";
     movingKey = "";
+    document.getElementById("home").hidden = true;
     document.getElementById("menu").hidden = true;
+    document.getElementById("title").textContent = "LEVEL " + level;
+    document.getElementById("subtitle").hidden = false;
     if (level === 4) {
-        document.getElementById("subtitle").textContent = "Level 4 - Táo: 0/20 | Vào A ra B, vào B ra A.";
+        document.getElementById("subtitle").textContent = "Level 4 - Điểm: 0/20 | Vào A ra B, vào B ra A.";
     } else {
         document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/20";
     }
@@ -463,7 +469,7 @@ function Level4() {
             tail.y = newHead.y;
             snake.push(tail);
         }
-        document.getElementById("subtitle").textContent = "Level 4 - Táo: " + score + "/20 | Vào A ra B, vào B ra A.";
+        document.getElementById("subtitle").textContent = "Level 4 - Điểm: " + score + "/20 | Vào A ra B, vào B ra A.";
         movingKey = key;
         renderSnake();
         checkWin();
@@ -535,7 +541,7 @@ function Level5() {
             tail.y = newHead.y;
             snake.push(tail);
         }
-        document.getElementById("subtitle").textContent = "Level 5 - Táo: " + score + "/20";
+        document.getElementById("subtitle").textContent = "Level 5 - Điểm: " + score + "/20";
         movingKey = key;
         renderSnake();
         checkWin();
@@ -650,6 +656,13 @@ function quaMan() {
     else if (level === 5) Level6();
 }
 
+function chonLevel() {
+    document.getElementById("home").hidden = true;
+    document.getElementById("menu").hidden = false;
+    document.getElementById("title").textContent = "CHỌN MÀN CHƠI";
+    document.getElementById("subtitle").hidden = true;
+}
+
 function backMenu() {
     clearInterval(timer);
     timer = null;
@@ -668,7 +681,9 @@ function backMenu() {
     document.getElementById("restart").hidden = true;
     document.getElementById("next").hidden = true;
     document.getElementById("daoPhim").hidden = true;
-    document.getElementById("menu").hidden = false;
+    document.getElementById("home").hidden = false;
+    document.getElementById("menu").hidden = true;
+    document.getElementById("subtitle").hidden = true;
     document.getElementById("title").textContent = "RẮN SĂN MỒI";
     document.getElementById("subtitle").textContent = "Chọn màn chơi";
 }
@@ -680,8 +695,13 @@ function Message() {
     document.getElementById("restart").hidden = true;
     document.getElementById("next").hidden = level >= 6;
     document.getElementById("daoPhim").hidden = true;
-    document.getElementById("title").textContent = "LEVEL " + level;
-    document.getElementById("subtitle").textContent = "YOU WIN";
+    if (level === 6) {
+        document.getElementById("title").textContent = "YOU WIN";
+        document.getElementById("subtitle").textContent = "Bạn đã phá đảo trò chơi";
+    } else {
+        document.getElementById("title").textContent = "LEVEL " + level;
+        document.getElementById("subtitle").textContent = "YOU WIN";
+    }
 }
 
 document.addEventListener("keydown", function (event) {
