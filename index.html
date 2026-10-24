@@ -3,7 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <title>Snake - Rắn săn mồi</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #222222;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .game {
+            background-color: white;
+            border: 1px solid #cccccc;
+            padding: 24px;
+            width: 500px;
+        }
+
+        #title {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #555555;
+            margin-bottom: 16px;
+        }
+
+        .menu {
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 12px;
+            background-color: #eeeeee;
+            border: 1px solid #999999;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #dddddd;
+        }
+
+        #stop {
+            width: 80px;
+        }
+
+        #san {
+            position: relative;
+            width: 450px;
+            height: 450px;
+            margin: 16px auto;
+        }
+
+        #game {
+            width: 100%;
+            height: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        #lose {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000a6;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lose[hidden] {
+            display: none;
+        }
+
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            font-size: 14px;
+            line-height: 14px;
+        }
+
+        .congA {
+            background-color: cyan;
+        }
+
+        .congB {
+            background-color: cyan;
+        }
+
+        .dot {
+            background-color: greenyellow;
+        }
+
+        .apple {
+            background-color: red;
+        }
+
+        .tuong {
+            background-color: gray;
+        }
+
+        .appleDoc {
+            background-color: purple;
+        }
+
+        .appleTuong {
+            background-color: blue;
+        }
+
+        .appleDao {
+            background-color: yellow;
+        }
+    </style>
 </head>
 <body>
     <main class="game">
