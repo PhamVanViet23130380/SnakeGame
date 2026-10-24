@@ -7,6 +7,7 @@ document.getElementById("l3").addEventListener("click", Level3);
 document.getElementById("l4").addEventListener("click", Level4);
 document.getElementById("next").addEventListener("click", quaMan);
 document.getElementById("l5").addEventListener("click", Level5);
+document.getElementById("l6").addEventListener("click", Level6);
 
 var row = 15;
 var col = 15;
@@ -26,6 +27,8 @@ var tuong = [];
 var level = 1;
 var appleDao = null;
 var count = 0;
+var congA = null;
+var congB = null;
 
 function initGame(col, row) {
     for (let i = 0; i < row; i++) {
@@ -41,8 +44,16 @@ function initGame(col, row) {
 }
 
 function initSnake() {
-    let x = parseInt(Math.random() * (row - 7)) + 5;
-    let y = parseInt(Math.random() * (col - 7)) + 5;
+    let x;
+    let y;
+    if (level === 4) {
+        // Rắn ở khu trên, chừa khoảng trống bên trái để kịp điều khiển
+        x = parseInt(Math.random() * 4) + 2;
+        y = parseInt(Math.random() * 4) + 8;
+    } else {
+        x = parseInt(Math.random() * (row - 7)) + 5;
+        y = parseInt(Math.random() * (col - 7)) + 5;
+    }
     return [{ x, y }, { x, y: y - 1 }];
 }
 
@@ -70,6 +81,8 @@ function initApple() {
             if (appleDoc !== null && appleDoc.x === i && appleDoc.y === j) free = false;
             if (appleTuong !== null && appleTuong.x === i && appleTuong.y === j) free = false;
             if (appleDao !== null && appleDao.x === i && appleDao.y === j) free = false;
+            if (congA !== null && congA.x === i && congA.y === j) free = false;
+            if (congB !== null && congB.x === i && congB.y === j) free = false;
             if (free) empty.push({ x: i, y: j });
         }
 
@@ -137,13 +150,13 @@ function start() {
     key = "";
     movingKey = "";
     document.getElementById("menu").hidden = true;
-    if (level === 3 || level === 5) {
-        document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/20";
+    if (level === 4) {
+        document.getElementById("subtitle").textContent = "Level 4 - Táo: 0/20 | Vào A ra B, vào B ra A.";
     } else {
-        document.getElementById("subtitle").textContent = "Level " + level + " - Táo: 0/20";
+        document.getElementById("subtitle").textContent = "Level " + level + " - Điểm: 0/20";
     }
     document.getElementById("buttons").hidden = false;
-    document.getElementById("daoPhim").hidden = level !== 5;
+    document.getElementById("daoPhim").hidden = level !== 6;
     document.getElementById("daoPhim").textContent = "Táo vàng: +2 điểm, đảo phím trong 20 bước.";
     document.getElementById("stop").textContent = "Stop";
     document.getElementById("stop").disabled = false;
@@ -232,7 +245,7 @@ function Level1() {
         }
 
         if (an) {
-            // Ăn táo giữ đuôi, thêm đầu mới để rắn dài ra.
+            // Ăn táo giữ đuôi, thêm đầu mới để rắn dài ra
             snake.push(newHead);
             score++;
             document.getElementById("subtitle").textContent = "Level 1 - Táo: " + score + "/20";
@@ -256,10 +269,13 @@ function Level2() {
     game.textContent = "";
     initGame(row, col);
     tuong = [
-        { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 },
-        { x: 13, y: 1 }, { x: 12, y: 1 }, { x: 13, y: 2 },
-        { x: 13, y: 12 }, { x: 13, y: 13 }, { x: 12, y: 13 },
-        { x: 1, y: 12 }, { x: 1, y: 13 }, { x: 2, y: 13 },
+        {x:0, y:0 }, {x:0, y:1}, {x:0, y:2},{x:0, y:3}, {x: 0, y:4}, {x:0, y:5},{x:0, y:6}, {x:0, y: 7}, {x:0, y:8}, {x:0, y:9}, {x:0, y:10}, {x:0, y:11},{x:0, y:12}, {x:0, y:13}, {x:0, y:14},
+
+        {x:14, y:0}, {x: 14, y:1}, {x:14,y:2},{x:14, y:3}, {x:14, y:4}, {x:14, y:5},{x:14, y:6}, {x:14, y:7}, {x:14, y:8},{x:14, y:9}, {x:14, y:10},{x:14, y:11},{x:14, y:12}, {x:14, y:13}, {x:14, y:14},
+
+        {x:1, y:0},{x:2, y:0}, {x:3, y:0},{ x: 4, y:0}, {x:5, y:0}, {x:6, y:0},{x:7, y:0}, {x:8, y:0}, {x:9, y:0},{x:10, y:0}, {x:11, y:0}, {x:12, y:0},{x:13, y:0},
+
+        {x:1, y:14}, {x:2, y:14}, {x:3, y:14},{x:4, y:14}, {x:5, y: 14}, {x:6, y:14},{x:7, y:14}, {x:8, y:14}, {x:9, y:14},{x:10, y:14}, {x:11,y: 14}, {x:12,y: 14},{x:13, y:14},
     ];
     for (const o of tuong) {
         document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
@@ -387,6 +403,79 @@ function Level4() {
     clearInterval(timer);
     appleDoc = null;
     appleTuong = null;
+    appleDao = null;
+    count = 0;
+    congA = { x: 3, y: 3 };
+    congB = { x: 11, y: 11 };
+    game.textContent = "";
+    initGame(row, col);
+    tuong = [
+        {x:0, y:0 }, {x:0, y:1}, {x:0, y:2},{x:0, y:3}, {x: 0, y:4}, {x:0, y:5},{x:0, y:6}, {x:0, y: 7}, {x:0, y:8}, {x:0, y:9}, {x:0, y:10}, {x:0, y:11},{x:0, y:12}, {x:0, y:13}, {x:0, y:14},
+
+        {x:14, y:0}, {x: 14, y:1}, {x:14,y:2},{x:14, y:3}, {x:14, y:4}, {x:14, y:5},{x:14, y:6}, {x:14, y:7}, {x:14, y:8},{x:14, y:9}, {x:14, y:10},{x:14, y:11},{x:14, y:12}, {x:14, y:13}, {x:14, y:14},
+
+        {x:1, y:0},{x:2, y:0}, {x:3, y:0},{ x: 4, y:0}, {x:5, y:0}, {x:6, y:0},{x:7, y:0}, {x:8, y:0}, {x:9, y:0},{x:10, y:0}, {x:11, y:0}, {x:12, y:0},{x:13, y:0},
+
+        {x:1, y:14}, {x:2, y:14}, {x:3, y:14},{x:4, y:14}, {x:5, y: 14}, {x:6, y:14},{x:7, y:14}, {x:8, y:14}, {x:9, y:14},{x:10, y:14}, {x:11,y: 14}, {x:12,y: 14},{x:13, y:14},
+
+        {x:7, y:1}, {x:7, y:2}, {x:7, y:3}, {x:7, y:4}, {x:7, y:5}, {x:7, y:6}, {x:7, y:7}, {x:7, y:8}, {x:7, y:9}, {x:7, y:10}, {x:7, y:11}, {x:7, y:12}, {x:7, y:13},
+    ];
+    for (const o of tuong) {
+        document.getElementById("cell_" + o.x + "_" + o.y).classList.add("tuong");
+    }
+    document.getElementById("cell_" + congA.x + "_" + congA.y).classList.add("congA");
+    document.getElementById("cell_" + congA.x + "_" + congA.y).textContent = "A";
+    document.getElementById("cell_" + congB.x + "_" + congB.y).classList.add("congB");
+    document.getElementById("cell_" + congB.x + "_" + congB.y).textContent = "B";
+
+    snake = initSnake();
+    apple = initApple();
+    document.getElementById("title").textContent = "LEVEL 4";
+    start();
+    timer = setInterval(() => {
+        if (dead || win || pause || game.hidden) return;
+        let newHead = diChuyen();
+        if (checkThan(newHead) || checkTuong(newHead)) {
+            gameOver();
+            return;
+        }
+
+        if (newHead.x === congA.x && newHead.y === congA.y) {
+            newHead.x = congB.x;
+            newHead.y = congB.y;
+        } else if (newHead.x === congB.x && newHead.y === congB.y) {
+            newHead.x = congA.x;
+            newHead.y = congA.y;
+        }
+
+        if (checkThan(newHead) || checkTuong(newHead)) {
+            gameOver();
+            return;
+        }
+        let an = apple !== null && newHead.x === apple.x && newHead.y === apple.y;
+        if (an) {
+            snake.push(newHead);
+            score++;
+            apple = initApple();
+        } else {
+            let tail = snake.shift();
+            tail.x = newHead.x;
+            tail.y = newHead.y;
+            snake.push(tail);
+        }
+        document.getElementById("subtitle").textContent = "Level 4 - Táo: " + score + "/20 | Vào A ra B, vào B ra A.";
+        movingKey = key;
+        renderSnake();
+        checkWin();
+    }, 300);
+}
+
+function Level5() {
+    if (!game.hidden && !dead) return;
+    level = 5;
+    clearInterval(timer);
+    appleDoc = null;
+    appleTuong = null;
     game.textContent = "";
     initGame(row, col);
     tuong = [
@@ -416,7 +505,7 @@ function Level4() {
 
     apple = initApple();
     appleTuong = initAppleDoc();
-    document.getElementById("title").textContent = "LEVEL 4";
+    document.getElementById("title").textContent = "LEVEL 5";
     start();
     timer = setInterval(() => {
         if (dead || win || pause || game.hidden) return;
@@ -446,16 +535,16 @@ function Level4() {
             tail.y = newHead.y;
             snake.push(tail);
         }
-        document.getElementById("subtitle").textContent = "Level 4 - Táo: " + score + "/20";
+        document.getElementById("subtitle").textContent = "Level 5 - Táo: " + score + "/20";
         movingKey = key;
         renderSnake();
         checkWin();
     }, 300);
 }
 
-function Level5() {
+function Level6() {
     if (!game.hidden && !dead) return;
-    level = 5;
+    level = 6;
     clearInterval(timer);
     appleDoc = null;
     appleTuong = null;
@@ -490,7 +579,7 @@ function Level5() {
 
     apple = initApple();
     appleDao = initAppleDoc();
-    document.getElementById("title").textContent = "LEVEL 5";
+    document.getElementById("title").textContent = "LEVEL 6";
     start();
     timer = setInterval(() => {
         if (dead || win || pause || game.hidden) return;
@@ -523,7 +612,7 @@ function Level5() {
         } else if (count > 0) {
             count--;
         }
-        document.getElementById("subtitle").textContent = "Level 5 - Điểm: " + score + "/20";
+        document.getElementById("subtitle").textContent = "Level 6 - Điểm: " + score + "/20";
         if (count > 0) {
             document.getElementById("daoPhim").textContent = "Đảo phím: còn " + count + " bước.";
         } else {
@@ -542,6 +631,7 @@ function choiLai() {
     else if (level === 3) Level3();
     else if (level === 4) Level4();
     else if (level === 5) Level5();
+    else if (level === 6) Level6();
 }
 
 function stopGame() {
@@ -551,12 +641,13 @@ function stopGame() {
 }
 
 function quaMan() {
-    if (!win || level >= 5) return;
+    if (!win || level >= 6) return;
     backMenu();
     if (level === 1) Level2();
     else if (level === 2) Level3();
     else if (level === 3) Level4();
     else if (level === 4) Level5();
+    else if (level === 5) Level6();
 }
 
 function backMenu() {
@@ -566,6 +657,8 @@ function backMenu() {
     appleTuong = null;
     appleDao = null;
     count = 0;
+    congA = null;
+    congB = null;
     tuong = [];
     pause = false;
     document.getElementById("lose").hidden = true;
@@ -585,7 +678,7 @@ function Message() {
     document.getElementById("san").hidden = true;
     game.hidden = true;
     document.getElementById("restart").hidden = true;
-    document.getElementById("next").hidden = level >= 5;
+    document.getElementById("next").hidden = level >= 6;
     document.getElementById("daoPhim").hidden = true;
     document.getElementById("title").textContent = "LEVEL " + level;
     document.getElementById("subtitle").textContent = "YOU WIN";
@@ -601,7 +694,7 @@ document.addEventListener("keydown", function (event) {
             event.preventDefault();
 
             let newKey = event.key;
-            if (level === 5 && count > 0) {
+            if (level === 6 && count > 0) {
                 if (newKey === "ArrowUp") newKey = "ArrowDown";
                 else if (newKey === "ArrowDown") newKey = "ArrowUp";
                 else if (newKey === "ArrowLeft") newKey = "ArrowRight";

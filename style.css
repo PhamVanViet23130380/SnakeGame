@@ -86,7 +86,19 @@ button:hover {
 }
 
 .cell {
+    width: 30px;
+    height: 30px;
     border: 1px solid black;
+    font-size: 14px;
+    line-height: 14px;
+}
+
+.congA {
+    background-color: cyan;
+}
+
+.congB {
+    background-color: cyan;
 }
 
 .dot {
